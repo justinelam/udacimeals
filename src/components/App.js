@@ -1,21 +1,42 @@
-import React, { Component } from 'react';
-import logo from '../logo.svg';
-import '../App.css';
+import React, { Component } from 'react'
+import '../App.css'
+import { connect } from 'react-redux'
+import { addRecipe, removeFromCalendar } from '../actions'
 
 class App extends Component {
+  doThing = () => {
+    this.props.selectRecipe({})
+  }
   render() {
+
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+      <div>
+        Hello World
       </div>
     );
   }
 }
+function mapStateToProps(calendar){
+  const dayOrder = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+  return {
+    calendar: dayOrder.map((day) => ({
+      day,
+      meals:  Object.keys(calendar[day]).reduce((meals,meal)=> {
+        meals[meal] = calendar[day][meal]
+        ? calendar[day][meal]
+        : null
 
-export default App;
+        return meals
+      }, {}) //{} is initial value
+    })),
+  }
+}
+function mapDispatchToProps(dispatch){
+  return {
+    selectRecipe: (data) => dispatch(addRecipe(data)),
+    remove: (data)  => dispatch(removeFromCalendar(data)),
+  }
+
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(App);
